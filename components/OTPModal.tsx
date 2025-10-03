@@ -41,7 +41,10 @@ const OtpModal = ({
       const sessionId = await verifySecret({ accountId, password });
       if (sessionId) router.push('/');
     } catch (error) {
-      console.log(error);
+      console.error('OTP verification error:', error);
+      alert(
+        `OTP verification failed: ${error instanceof Error ? error.message : JSON.stringify(error)}`
+      );
     }
 
     setIsLoading(false);
@@ -52,8 +55,12 @@ const OtpModal = ({
     try {
       // Resend OTP logic here
       await sendEmailOTP({ email });
+      alert('OTP resent successfully!');
     } catch (error) {
-      console.log(error);
+      console.error('Resend OTP error:', error);
+      alert(
+        `Failed to resend OTP: ${error instanceof Error ? error.message : JSON.stringify(error)}`
+      );
     }
   };
 
@@ -105,7 +112,7 @@ const OtpModal = ({
                 />
               )}
             </AlertDialogAction>
-            <div className='subtitle-2 mt-2 flex text-center text-light-100'>
+            <div className='subtitle-2 mt-2 flex flex-row text-center text-light-100'>
               Didn&#39;t get a code?
               <Button
                 type='button'

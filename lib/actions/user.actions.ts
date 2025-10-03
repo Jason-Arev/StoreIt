@@ -81,7 +81,7 @@ export const createAccount = async ({
         username,
         email,
         avatar: '',
-        account_id: accountId,
+        accountId,
       }
     );
   }
@@ -123,7 +123,7 @@ export const getCurrentUser = async () => {
     const user = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.usercollectionId,
-      [Query.equal('account_id', result.$id)]
+      [Query.equal('accountId', result.$id)]
     );
 
     if (user.total <= 0) return null;
@@ -157,7 +157,7 @@ export const loginUser = async (email: string) => {
       return parseStringify({ accountId: null, error: 'User not found' });
     }
 
-    return parseStringify({ accountId: existingUser.account_id });
+    return parseStringify({ accountId: existingUser.accountId });
   } catch (error) {
     handleError(error, 'Failed to login user');
   }

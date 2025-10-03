@@ -62,13 +62,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       setAccountId(user.accountId);
     } catch (error) {
-      console.error('Account creation error:', error);
+      console.error('Authentication error:', error);
 
       // More specific error handling
       if (error instanceof Error) {
-        setErrorMessage(error.message);
+        setErrorMessage(`Authentication failed: ${error.message}`);
       } else {
-        setErrorMessage('Failed to create account. Please try again.');
+        setErrorMessage(`Authentication failed: ${JSON.stringify(error)}`);
       }
     } finally {
       setIsLoading(false);
@@ -142,9 +142,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 className='m-2 animate-spin'
               />
             )}
-
-            {errorMessage && <p className='error-message'>{errorMessage}</p>}
           </Button>
+
+          {errorMessage && (
+            <p className='error-message mt-2 text-center text-sm text-light-100'>
+              {errorMessage}
+            </p>
+          )}
           <div className='body-2 flex justify-center'>
             <p className='text-light-100'>
               {type === 'sign-in'
