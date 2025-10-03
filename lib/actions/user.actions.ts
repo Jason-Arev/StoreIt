@@ -12,10 +12,11 @@
 */
 
 import { Query, ID } from 'node-appwrite';
-import { createAdminClient } from '../appwrite';
+import { createAdminClient, createSessionClient } from '../appwrite';
 import { appwriteConfig } from '../appwrite/config';
 import { parseStringify } from '../utils';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
@@ -33,7 +34,7 @@ export const getUserByEmail = async (email: string) => {
   return result.total > 0 ? result.documents[0] : null;
 };
 
-const handleError = (error: unknown, message: string) => {
+export const handleError = async (error: unknown, message: string) => {
   console.log(error, message);
   throw error;
 };
@@ -110,5 +111,54 @@ export const verifySecret = async ({
     return parseStringify({ sessionId: session.$id });
   } catch (error) {
     handleError(error, 'Failed to verify OTP');
+  }
+};
+
+export const getCurrentUser = async () => {
+  try {
+    const { databases, account } = await createSessionClient();
+
+    const result = await account.get();
+
+    const user = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usercollectionId,
+      [Query.equal('account_id', result.$id)]
+    );
+
+    if (user.total <= 0) return null;
+
+    return parseStringify(user.documents[0]);
+  } catch (error) {
+    console.log('Error getting current user:', error);
+    return null;
+  }
+};
+
+export const logout = async () => {
+  const { account } = await createSessionClient();
+
+  try {
+    await account.deleteSession('current');
+    (await cookies()).delete('appwrite-session');
+  } catch (error) {
+    handleError(error, 'Failed to sign out user');
+  } finally {
+    redirect('/sign-in');
+  }
+};
+
+export const loginUser = async (email: string) => {
+  try {
+    const existingUser = await getUserByEmail(email);
+
+    if (!existingUser) {
+      await sendEmailOTP({ email });
+      return parseStringify({ accountId: null, error: 'User not found' });
+    }
+
+    return parseStringify({ accountId: existingUser.account_id });
+  } catch (error) {
+    handleError(error, 'Failed to login user');
   }
 };

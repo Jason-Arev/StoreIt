@@ -1,16 +1,21 @@
+'use server';
+
 // node-appwrite
 
 import { Client, Account, Databases, Storage, Avatars } from 'node-appwrite';
 import { appwriteConfig } from './config';
+import { cookies } from 'next/headers';
 
 export const createSessionClient = async () => {
   const client = new Client()
     .setEndpoint(appwriteConfig.endpointUrl)
     .setProject(appwriteConfig.projectId);
 
-  // For client-side usage, we'll handle sessions differently
-  // This function should only be used server-side where cookies are available
-  // For client-side, use the regular appwrite client from 'appwrite' package
+  const session = (await cookies()).get('appwrite-session');
+
+  if (!session || !session.value) throw new Error('No session found');
+
+  client.setSession(session.value);
 
   return {
     get account() {
