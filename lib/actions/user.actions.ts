@@ -121,6 +121,11 @@ export const getCurrentUser = async () => {
 
     const result = await account.get();
 
+    if (!appwriteConfig.databaseId || !appwriteConfig.usercollectionId) {
+      console.error('Missing Appwrite configuration');
+      return null;
+    }
+
     const user = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.usercollectionId,
