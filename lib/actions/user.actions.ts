@@ -105,7 +105,7 @@ export const verifySecret = async ({
       path: '/',
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
 
     return parseStringify({ sessionId: session.$id });

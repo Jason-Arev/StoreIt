@@ -1,43 +1,20 @@
 'use server';
 
-// node-appwrite
-
-import { Client, Account, Databases, Storage, Avatars } from 'node-appwrite';
-import { appwriteConfig } from './config';
+import { Account, Avatars, Client, Databases, Storage } from 'node-appwrite';
+import { appwriteConfig } from '@/lib/appwrite/config';
 import { cookies } from 'next/headers';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const createSessionClient = async () => {
+  noStore();
   const client = new Client()
     .setEndpoint(appwriteConfig.endpointUrl)
     .setProject(appwriteConfig.projectId);
 
-  const session = (await cookies()).get('appwrite-session');
+  const cookieStore = await cookies();
+  const session = cookieStore.get('appwrite-session');
 
-  if (!session || !session.value) throw new Error('No session found');
-
-  client.setSession(session.value);
-
-  return {
-    get account() {
-      return new Account(client);
-    },
-    get databases() {
-      return new Databases(client);
-    },
-  };
-};
-
-// Server-side session client that uses cookies
-export const createServerSessionClient = async () => {
-  const { cookies } = await import('next/headers');
-
-  const client = new Client()
-    .setEndpoint(appwriteConfig.endpointUrl)
-    .setProject(appwriteConfig.projectId);
-
-  const session = (await cookies()).get('appwrite-session');
-
-  if (!session || !session.value) throw new Error('No session found');
+  if (!session?.value) throw new Error('No session');
 
   client.setSession(session.value);
 
@@ -52,6 +29,7 @@ export const createServerSessionClient = async () => {
 };
 
 export const createAdminClient = async () => {
+  noStore(); // safe to add here too
   const client = new Client()
     .setEndpoint(appwriteConfig.endpointUrl)
     .setProject(appwriteConfig.projectId)
