@@ -13,21 +13,18 @@
 
 import { Query, ID } from 'node-appwrite';
 import { createAdminClient, createSessionClient } from '../appwrite';
-import { appwriteConfig } from '../appwrite/config';
+import { getAppwriteConfig } from '../appwrite/config';
 import { parseStringify } from '../utils';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export const getUserByEmail = async (email: string) => {
   const { databases } = await createAdminClient();
-
-  if (!appwriteConfig.databaseId || !appwriteConfig.usercollectionId) {
-    throw new Error('Appwrite databaseId or usercollectionId is not defined');
-  }
+  const config = getAppwriteConfig();
 
   const result = await databases.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.usercollectionId,
+    config.databaseId,
+    config.usercollectionId,
     [Query.equal('email', email)]
   );
 
@@ -68,14 +65,11 @@ export const createAccount = async ({
 
   if (!existingUser) {
     const { databases } = await createAdminClient();
-
-    if (!appwriteConfig.databaseId || !appwriteConfig.usercollectionId) {
-      throw new Error('Appwrite databaseId or usercollectionId is not defined');
-    }
+    const config = getAppwriteConfig();
 
     await databases.createDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.usercollectionId,
+      config.databaseId,
+      config.usercollectionId,
       ID.unique(),
       {
         username,
@@ -118,17 +112,13 @@ export const verifySecret = async ({
 export const getCurrentUser = async () => {
   try {
     const { databases, account } = await createSessionClient();
+    const config = getAppwriteConfig();
 
     const result = await account.get();
 
-    if (!appwriteConfig.databaseId || !appwriteConfig.usercollectionId) {
-      console.error('Missing Appwrite configuration');
-      return null;
-    }
-
     const user = await databases.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.usercollectionId,
+      config.databaseId,
+      config.usercollectionId,
       [Query.equal('accountId', result.$id)]
     );
 

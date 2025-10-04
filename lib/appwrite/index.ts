@@ -1,15 +1,16 @@
 'use server';
 
 import { Account, Avatars, Client, Databases, Storage } from 'node-appwrite';
-import { appwriteConfig } from '@/lib/appwrite/config';
+import { getAppwriteConfig } from '@/lib/appwrite/config';
 import { cookies } from 'next/headers';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const createSessionClient = async () => {
   noStore();
+  const config = getAppwriteConfig();
   const client = new Client()
-    .setEndpoint(appwriteConfig.endpointUrl)
-    .setProject(appwriteConfig.projectId);
+    .setEndpoint(config.endpointUrl)
+    .setProject(config.projectId);
 
   const cookieStore = await cookies();
   const session = cookieStore.get('appwrite-session');
@@ -32,10 +33,14 @@ export const createSessionClient = async () => {
 
 export const createAdminClient = async () => {
   noStore(); // safe to add here too
+
+  // Get config at runtime to ensure environment variables are loaded
+  const config = getAppwriteConfig();
+
   const client = new Client()
-    .setEndpoint(appwriteConfig.endpointUrl)
-    .setProject(appwriteConfig.projectId)
-    .setKey(appwriteConfig.secretKey);
+    .setEndpoint(config.endpointUrl)
+    .setProject(config.projectId)
+    .setKey(config.secretKey);
 
   return {
     get account() {
