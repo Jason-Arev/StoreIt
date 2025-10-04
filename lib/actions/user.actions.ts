@@ -101,7 +101,8 @@ export const verifySecret = async ({
 
     const session = await account.createSession(accountId, password);
 
-    (await cookies()).set('appwrite-session', session.secret, {
+    const cookieStore = await cookies();
+    cookieStore.set('appwrite-session', session.secret, {
       path: '/',
       httpOnly: true,
       secure: true,
@@ -140,7 +141,8 @@ export const logout = async () => {
 
   try {
     await account.deleteSession('current');
-    (await cookies()).delete('appwrite-session');
+    const cookieStore = await cookies();
+    cookieStore.delete('appwrite-session');
   } catch (error) {
     handleError(error, 'Failed to sign out user');
   } finally {

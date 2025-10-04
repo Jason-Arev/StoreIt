@@ -11,6 +11,9 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 export const runtime = 'nodejs';
 
+// Force this layout to be dynamic
+export const dynamicParams = true;
+
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const currentUser = await getCurrentUser();
 

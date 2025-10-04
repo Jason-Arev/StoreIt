@@ -11,12 +11,16 @@ export const createSessionClient = async () => {
     .setEndpoint(appwriteConfig.endpointUrl)
     .setProject(appwriteConfig.projectId);
 
-  const cookieStore = await cookies();
-  const session = cookieStore.get('appwrite-session');
+  try {
+    const cookieStore = await cookies();
+    const session = cookieStore.get('appwrite-session');
 
-  if (!session?.value) throw new Error('No session');
+    if (!session?.value) throw new Error('No session');
 
-  client.setSession(session.value);
+    client.setSession(session.value);
+  } catch {
+    throw new Error('No session');
+  }
 
   return {
     get account() {
