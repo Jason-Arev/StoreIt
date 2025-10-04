@@ -1,4 +1,4 @@
-# FileSafe 📁
+# StoreIt 📁
 
 <div align="center">
   <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=000000" alt="nextdotjs" />
@@ -22,7 +22,7 @@
 
 ## 🤖 Introduction
 
-**FileSafe** is a full-stack file storage and sharing platform built as a follow-along learning project to practice modern web development technologies. This project demonstrates the implementation of a complete file management system with user authentication, email verification, and cloud storage integration using industry-standard tools and frameworks.
+**StoreIt** is a full-stack file storage and sharing platform built as a follow-along learning project to practice modern web development technologies. This project demonstrates the implementation of a complete file management system with user authentication, email verification, and cloud storage integration using industry-standard tools and frameworks.
 
 This was a hands-on learning experience focused on building a production-ready web application that combines frontend development, backend services, database management, and cloud storage solutions.
 
@@ -129,7 +129,7 @@ This project was created as a practical exercise to gain experience with:
 
 ```bash
 git clone <repository-url>
-cd FileSafe
+cd StoreIt
 ```
 
 2. **Install dependencies**
@@ -167,7 +167,7 @@ yarn dev
 ## 📁 Project Structure
 
 ```
-FileSafe/
+StoreIt/
 ├── app/                    # Next.js 13+ app directory
 │   ├── (auth)/            # Authentication routes
 │   │   ├── sign-in/       # Login page
@@ -216,7 +216,7 @@ FileSafe/
 
 ## 📚 What I Learned
 
-Through building FileSafe, I gained practical experience in:
+Through building StoreIt, I gained practical experience in:
 
 ### Technical Skills
 
