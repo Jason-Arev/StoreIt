@@ -1,16 +1,16 @@
 import React from 'react';
 import Image from 'next/image';
-import { cn, getFileIcon } from '../lib/utils';
+import { cn, getFileIcon } from '@/lib/utils';
 
 interface Props {
   type: string;
   extension: string;
-  url: string;
+  url?: string;
   imageClassName?: string;
   className?: string;
 }
 
-const Thumbnail = ({
+export const Thumbnail = ({
   type,
   extension,
   url = '',
@@ -35,5 +35,4 @@ const Thumbnail = ({
     </figure>
   );
 };
-
 export default Thumbnail;

@@ -25,6 +25,7 @@ const Sidebar = ({ username, avatar, email }: Props) => {
           width={160}
           height={50}
           className='hidden h-auto lg:block'
+          suppressHydrationWarning
         />
         <Image
           src='/assets/icons/logo-brand.svg'
